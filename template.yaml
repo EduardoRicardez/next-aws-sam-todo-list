@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+
+Resources:
+  TodoFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: lambda.handler
+      Runtime: nodejs14.x
+      CodeUri: ./
+      Events:
+        ApiRoot:
+          Type: Api
+          Properties:
+            Path: /
+            Method: ANY
+        Api:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+
+  TodoTable:
+    Type: AWS::Serverless::SimpleTable
+
+Outputs:
+  Api:
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
