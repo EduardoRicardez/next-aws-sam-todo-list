@@ -20,9 +20,6 @@ Resources:
             Path: /{proxy+}
             Method: ANY
 
-  TodoTable:
-    Type: AWS::Serverless::SimpleTable
-
 Outputs:
   Api:
     Description: "API Gateway endpoint URL"
