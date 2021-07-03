@@ -5,14 +5,14 @@ import { useRef } from "react";
 const Task = ({ title, columnIndex, taskIndex, onTaskMove }) => {
   const taskRef = useRef();
 
-  const [_, drag] = useDrag(() => ({
+  const [_, drag] = useDrag({
     type: "BOX",
 
     item: { title, columnIndex, taskIndex },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
-  }));
+  });
 
   const [{ canDrop, isOver }, drop] = useDrop({
     // The type (or types) to accept - strings or symbols
