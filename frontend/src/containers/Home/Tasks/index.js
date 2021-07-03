@@ -39,6 +39,11 @@ const Tasks = () => {
       task
     );
 
+  const deleteDBTask = (id) =>
+    axios.delete(
+      `https://3filczyyad.execute-api.us-east-1.amazonaws.com/Prod/todo_item/${id}`
+    );
+
   useEffect(() => {
     getDBTask();
   }, []);
