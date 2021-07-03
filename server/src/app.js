@@ -1,5 +1,6 @@
 var express = require("express");
 var logger = require("morgan");
+var cors = require("cors");
 const dynamoose = require("dynamoose");
 
 dynamoose.aws.sdk.config.update({
@@ -10,6 +11,7 @@ dynamoose.aws.sdk.config.update({
 
 const app = express();
 
+app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

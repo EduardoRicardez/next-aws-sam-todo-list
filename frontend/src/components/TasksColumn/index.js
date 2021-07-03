@@ -2,17 +2,44 @@ import { useState } from "react";
 import Task from "../Task";
 import TasksColumnContainer from "./index.style";
 import { Field, Form, Formik } from "formik";
+import { useDrop } from "react-dnd";
 
 const initialValues = { title: "" };
 
-const TasksColumn = ({ title, tasks = [], onTaskCreated = () => {} }) => {
+const TasksColumn = ({
+  title,
+  tasks = [],
+  onTaskCreated = () => {},
+  onTaskMove = () => {},
+  columnIndex,
+}) => {
+  const [{ canDrop, isOver }, drop] = useDrop({
+    // The type (or types) to accept - strings or symbols
+    accept: "BOX",
+    // Props to collect
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+    drop: (item, monitor) => {
+      const didDrop = monitor.didDrop();
+      if (!didDrop) {
+        const dragColumnIndex = item.columnIndex;
+        const dragTaskIndex = item.taskIndex;
+        const hoverColumnIndex = columnIndex;
+
+        onTaskMove(dragColumnIndex, dragTaskIndex, hoverColumnIndex);
+      }
+    },
+  });
+
   const [isAddingNewTask, setIsAddingNewTask] = useState(false);
 
   const toggleFooterView = () => setIsAddingNewTask(!isAddingNewTask);
 
-  const handleAddTask = (values) => {
+  const handleAddTask = async (values) => {
+    await onTaskCreated(values, title);
     toggleFooterView();
-    onTaskCreated(values, title);
   };
 
   const handleTitleEnterKeyDown = (e, submitForm) => {
@@ -23,13 +50,19 @@ const TasksColumn = ({ title, tasks = [], onTaskCreated = () => {} }) => {
   };
 
   return (
-    <TasksColumnContainer>
+    <TasksColumnContainer ref={drop}>
       <header>
         <span>{title}</span>
       </header>
       <div className="tasks">
-        {tasks.map((task) => (
-          <Task key={task.id} {...task} />
+        {tasks.map((task, index) => (
+          <Task
+            key={task.id}
+            {...task}
+            columnIndex={columnIndex}
+            taskIndex={index}
+            onTaskMove={onTaskMove}
+          />
         ))}
       </div>
       <footer>

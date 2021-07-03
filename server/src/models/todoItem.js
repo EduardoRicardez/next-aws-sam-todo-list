@@ -6,7 +6,7 @@ const ToDoItemSchema = new Schema(
   {
     id: String,
     title: { type: String, required: true },
-    body: String,
+    columnIndex: { type: Number, required: true },
   },
   { timestamps: true }
 );

@@ -12,7 +12,7 @@ exports.todo_item_list = async function (_, res, next) {
 
 exports.todo_item_detail = async function (req, res, next) {
   const { id } = req.params;
-  console.log("EL ID ES ", id);
+
   try {
     const todoItem = await TodoItem.get(id);
     res.json(todoItem);
@@ -22,11 +22,11 @@ exports.todo_item_detail = async function (req, res, next) {
 };
 
 exports.todo_item_create_post = async function (req, res, next) {
-  const { title, body } = req.body;
+  const { title, columnIndex } = req.body;
   const newTodoItem = new TodoItem({
     id: uuidv4(),
     title,
-    body,
+    columnIndex,
   });
   try {
     await newTodoItem.save();
